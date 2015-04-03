@@ -1,53 +1,82 @@
+[user]
+	name = Alexander Kryklia
+	email = kryklia@gmail.com
 [core]
-  pager = less -FRSX
-  whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
-  editor = vim -f
-  autocrlf = input
-  safecrlf = true
-  excludesfile = ~/.gitignore
-[push]
-  config = default
-  default = upstream
-[merge]
-  summary = true
-[color]
-  diff = auto
-  status = auto
-  branch = auto
-  interactive = auto
-  ui = true
-  pager = true
-[color "branch"]
-  current = yellow reverse
-  local   = yellow
-  remote  = green
-[color "diff"]
-  meta = blue
-  frag = magenta
-  old  = red
-  new  = green
-[color "status"]
-  added = yellow
-  changed = green
-  untracked = blue
+	excludesfile = /Users/kry/.gitignore_global
 [alias]
-  a       = add -u
-  aa      = add --all :/
-  ap      = add -u -p
-  b       = browse
-  c       = commit -v
-  co      = checkout
-  d       = diff
-  ds      = diff --staged
-  dw      = diff --color-words
-  po      = push origin head
-  pr      = "!f() { git fetch origin refs/pull/$1/head:pr/$1 && git co pr/$1; } ; f"
-  s       = status -s -b
-  sm      = submodule
-  smu     = submodule foreach git pull origin master
-  td      = merge --no-ff
-  up      = "!git fetch upstream && git rebase upstream/master"
-  w       = whatchanged --decorate
-  wp      = whatchanged --decorate -p
-  tree    = log --oneline --decorate --all --graph
-  l       = log --pretty='format:%C(yellow)%h %C(blue)%ad %C(reset)%s%C(red)%d %C(green)%an%C(reset), %C(cyan)%ar' --date=short
+	switch = !legit switch \"$@\"
+	branches = !legit branches
+	sprout = !legit sprout \"$@\"
+	unpublish = !legit unpublish \"$@\"
+	harvest = !legit harvest \"$@\"
+	sync = !legit sync \"$@\"
+	publish = !legit publish \"$@\"
+	graft = !legit graft \"$@\"
+
+	st = status
+    ci = commit
+    cm = commit -m
+    co = checkout
+    oneline = log --pretty=oneline
+    br = branch
+
+    la = log --pretty=\"format:%ad %h (%an): %s\" --date=short
+    lg = log --graph --oneline --decorate
+
+    # clean log, no merges
+    lgc = log --graph --oneline --decorate --no-merges
+
+	# http://stackoverflow.com/questions/1057564/pretty-git-branch-graphs
+
+    lg1 = log --graph --all --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%cr)%C(reset) %C(white)%s%C(reset) %C(bold white)— %cn%C(reset)%C(bold yellow)%d%C(reset)' --abbrev-commit --date=relative
+
+    lg2 = log --graph --all --format=format:'%C(bold blue)%h%C(reset) - %C(bold cyan)%cD%C(reset) %C(bold green)(%cr)%C(reset)%C(bold yellow)%d%C(reset)%n''          %C(white)%s%C(reset) %C(bold white)— %cn%C(reset)' --abbrev-commit
+
+    log-color = log --graph --full-history --all --color --pretty=format:'%x1b[31m%h%x09%x1b[32m%C(white)- %d%x1b[0m%x20%s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --date=relative
+
+    logall = log --graph --all --oneline --decorate
+
+    # What's not merged yet?
+    lgnm = log --graph --oneline --decorate master..
+
+    cancel = reset --soft HEAD^
+    last = log -1 HEAD
+    dc = diff --cached
+
+    mt = mergetool -y
+
+    rph = rev-parse HEAD
+    rbc = rebase --continue
+    rba = rebase --abort
+
+    addall = !git add -u . && git reset -- *.rake && git status
+    #hist = log --pretty=format:\"%h %ad | %s%d [%an]\" --graph --date=short
+
+[color]
+	#diff = auto
+	#status = auto
+	#branch = auto
+	ui = true
+[push]
+	default = current
+[core]
+	autocrlf = input
+    safecrlf = true
+    ignorecase = false
+[mergetool]
+    keepBackup = false
+[grep]
+    lineNumber = true
+[difftool "sourcetree"]
+	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
+	path = 
+[mergetool "sourcetree"]
+	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
+	trustExitCode = true
+#[filter "tabspace"]
+#	smudge = expand --tabs=4 --initial
+[mergetool "sublime"]
+	cmd = subl -w $MERGED
+	trustExitCode = false
+[merge]
+	tool = sublime
